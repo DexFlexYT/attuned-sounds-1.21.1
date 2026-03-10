@@ -4,11 +4,13 @@ import com.nitron.nitrogen.util.interfaces.ColorableItem;
 import net.acoyt.acornlib.api.item.CustomHitParticleItem;
 import net.acoyt.acornlib.api.item.CustomHitSoundItem;
 import net.acoyt.acornlib.api.item.ModelVaryingItem;
+import net.acoyt.acornlib.api.item.SprintUsableItem;
 import net.acoyt.acornlib.api.util.MiscUtils;
 import net.acoyt.acornlib.api.util.ParticleUtils;
 import net.acoyt.acornlib.impl.index.AcornParticles;
 import net.chemthunder.attuned.impl.Attuned;
 import net.chemthunder.attuned.impl.index.AttunedDataComponents;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.component.type.AttributeModifierSlot;
@@ -23,19 +25,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitParticleItem, ColorableItem, CustomHitSoundItem {
+public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitParticleItem, ColorableItem, CustomHitSoundItem, SprintUsableItem {
     public static final int maxCharges = 30;
     public static final SimpleParticleType[] EFFECTS = new SimpleParticleType[]{
             AcornParticles.LIGHT_GRAY_SWEEP,
@@ -47,9 +51,18 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
             AcornParticles.BLACK_SWEEP
     };
 
+    public static final SimpleParticleType[] AMARITE_EFFECTS = new SimpleParticleType[]{
+            AcornParticles.MAGENTA_SWEEP,
+            AcornParticles.ALT_GOLD_SWEEP
+    };
+
     public int startColor(ItemStack itemStack) {
         if (getSkin(itemStack) == 1) {
             return 0xFF2d2534;
+        }
+
+        if (getSkin(itemStack) == 2) {
+            return 0xFF632c6c;
         }
         return 0xFF2a2e28;
     }
@@ -58,12 +71,19 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
         if (getSkin(itemStack) == 1) {
             return 0xFF7a6873;
         }
+
+        if (getSkin(itemStack) == 2) {
+            return 0xFFf5cf5d;
+        }
         return 0xFFa99797;
     }
 
     public int backgroundColor(ItemStack itemStack) {
         if (getSkin(itemStack) == 1) {
             return 0xFF0c070e;
+        }
+        if (getSkin(itemStack) == 2) {
+            return 0xFF180f17;
         }
         return 0xF0171315;
     }
@@ -88,7 +108,8 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
 
                 switch (stack.getOrDefault(skin, 0)) {
                     case 0 -> result = 1;
-                    case 1 -> result = 0;
+                    case 1 -> result = 2;
+                    case 2 -> result = 0;
                 }
 
                 stack.set(skin, result);
@@ -108,6 +129,7 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
         switch (getSkin(stack)) {
             case 0 -> skinId = "tuning_fork";
             case 1 -> skinId = "skin/valediction";
+            case 2 -> skinId = "skin/amarite";
         }
 
         if (entity != null) {
@@ -116,7 +138,7 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
             }
         }
 
-      //  Armada.LOGGER.info(skinId);
+        //  Armada.LOGGER.info(skinId);
         return MiscUtils.isGui(renderMode) ? Attuned.id(skinId) : Attuned.id(skinId + "_handheld");
     }
 
@@ -127,7 +149,10 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
                 Attuned.id("tuning_fork_blocking"),
                 Attuned.id("skin/valediction"),
                 Attuned.id("skin/valediction_handheld"),
-                Attuned.id("skin/valediction_blocking")
+                Attuned.id("skin/valediction_blocking"),
+                Attuned.id("skin/amarite"),
+                Attuned.id("skin/amarite_handheld"),
+                Attuned.id("skin/amarite_blocking")
         );
     }
 
@@ -153,18 +178,20 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
 
     public void spawnHitParticles(PlayerEntity playerEntity, Entity target) {
         ItemStack stack = playerEntity.getStackInHand(Hand.MAIN_HAND);
-
-        if (getSkin(stack) == 1) {
-            ParticleUtils.spawnSweepParticles(ALT_EFFECTS[playerEntity.getRandom().nextInt(ALT_EFFECTS.length)], playerEntity);
-        } else {
-            ParticleUtils.spawnSweepParticles(EFFECTS[playerEntity.getRandom().nextInt(EFFECTS.length)], playerEntity);
+        switch (getSkin(stack)) {
+            case 0 -> ParticleUtils.spawnSweepParticles(EFFECTS[playerEntity.getRandom().nextInt(EFFECTS.length)], playerEntity);
+            case 1 -> ParticleUtils.spawnSweepParticles(ALT_EFFECTS[playerEntity.getRandom().nextInt(ALT_EFFECTS.length)], playerEntity);
+            case 2 -> ParticleUtils.spawnSweepParticles(AMARITE_EFFECTS[playerEntity.getRandom().nextInt(AMARITE_EFFECTS.length)], playerEntity);
         }
-
     }
 
     public Text getName(ItemStack stack) {
         if (getSkin(stack) == 1) {
             return Text.literal("Valediction").withColor(0x7d153b);
+        }
+
+        if (getSkin(stack) == 2) {
+            return Text.literal("Amarite Tuning Fork").withColor(0xf5cf5d);
         }
         return super.getName(stack).copy().withColor(0xFFa99797);
     }
@@ -184,11 +211,27 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
 
     public void playHitSound(PlayerEntity player, Entity target) {
         ItemStack stack = player.getMainHandStack();
+        SoundEvent toPlay = null;
 
-        if (getSkin(stack) == 1) {
-            player.playSound(SoundEvents.BLOCK_MANGROVE_ROOTS_BREAK, 1, 0.2f);
-        } else {
-            player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1, 4);
+        switch (getSkin(stack)) {
+            case 0 -> toPlay = SoundEvents.UI_BUTTON_CLICK.value();
+            case 1 -> toPlay = SoundEvents.BLOCK_MANGROVE_ROOTS_BREAK;
+            case 2 -> toPlay = SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK;
         }
+
+        player.playSound(toPlay, 1, (float) (1.0f + player.getRandom().nextGaussian() / 10.0f));
+    }
+
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return !miner.isCreative();
+    }
+
+    public void attuned$tuningForkParry(PlayerEntity player, LivingEntity source, World world, ItemStack stack) {
+        player.setVelocity(player.getRotationVec(0).multiply(-1.4f));
+        player.velocityModified = true;
+
+        player.stopUsingItem();
+
+        player.getItemCooldownManager().set(this, 90);
     }
 }

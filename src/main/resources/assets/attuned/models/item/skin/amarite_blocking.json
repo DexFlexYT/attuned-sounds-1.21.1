@@ -1,0 +1,6 @@
+{
+  "parent": "attuned:item/tune_blocking",
+  "textures": {
+    "layer0": "attuned:item/amarite_handheld"
+  }
+}
