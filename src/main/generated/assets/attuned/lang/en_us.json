@@ -5,5 +5,6 @@
   "enchantment.attuned.octave.desc": "Swaps the boost from blocking to a long-range dash in any direction.",
   "enchantment.attuned.shrill": "Shrill",
   "enchantment.attuned.shrill.desc": "Allows the user to release a large shockwave upon blocking a hit, deafening nearby enemies.",
+  "item.attuned.ancillary_bit": "Ancillary Bit",
   "item.attuned.tuning_fork": "Tuning Fork"
 }

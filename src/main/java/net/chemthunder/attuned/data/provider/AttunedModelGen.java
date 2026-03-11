@@ -18,5 +18,6 @@ public class AttunedModelGen extends FabricModelProvider {
 
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(AttunedItems.TUNING_FORK, Models.GENERATED);
+        itemModelGenerator.register(AttunedItems.ANCILLARY_BIT, Models.GENERATED);
     }
 }

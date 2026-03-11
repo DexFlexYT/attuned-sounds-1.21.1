@@ -65,6 +65,8 @@ public abstract class PlayerEntityMixin {
                                         0, 0, 0,
                                         0.1f
                                 );
+
+                                player.getItemCooldownManager().set(item, 90);
                             }
                         }
                     }

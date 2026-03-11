@@ -1,8 +1,6 @@
 package net.chemthunder.attuned.data;
 
-import net.chemthunder.attuned.data.provider.AttunedItemTagGen;
-import net.chemthunder.attuned.data.provider.AttunedLangGen;
-import net.chemthunder.attuned.data.provider.AttunedModelGen;
+import net.chemthunder.attuned.data.provider.*;
 import net.chemthunder.attuned.impl.index.AttunedDataComponents;
 import net.chemthunder.attuned.impl.index.data.AttunedEnchantments;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -17,6 +15,8 @@ public class AttunedDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(AttunedModelGen::new);
         pack.addProvider(AttunedLangGen::new);
         pack.addProvider(AttunedItemTagGen::new);
+        pack.addProvider(AttunedBlockLootTableGen::new);
+        pack.addProvider(AttunedBlockTagGen::new);
 
         pack.addProvider(AttunedDynamicRegistryGen::new);
 	}

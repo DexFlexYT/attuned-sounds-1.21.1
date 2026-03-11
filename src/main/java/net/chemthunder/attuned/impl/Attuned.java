@@ -1,5 +1,6 @@
 package net.chemthunder.attuned.impl;
 
+import net.acoyt.acornlib.api.ALib;
 import net.chemthunder.attuned.impl.index.*;
 import net.fabricmc.api.ModInitializer;
 
@@ -20,7 +21,9 @@ public class Attuned implements ModInitializer {
         AttunedParticles.init();
         AttunedStatusEffects.init();
 
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("im tuning my fork");
+
+        ALib.registerModMenu(MOD_ID, 0xFF201b28);
 	}
 
     public static Identifier id(String path) {

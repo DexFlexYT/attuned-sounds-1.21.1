@@ -64,13 +64,20 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
             AcornParticles.GOLD_SWEEP
     };
 
+    public static final SimpleParticleType[] WIMDY_EFFECTS = new SimpleParticleType[]{
+            AcornParticles.LIGHT_GRAY_SWEEP,
+            AcornParticles.WHITE_SWEEP
+    };
+
     public int startColor(ItemStack itemStack) {
         if (getSkin(itemStack) == 1) {
             return 0xFF2d2534;
         }
-
         if (getSkin(itemStack) == 2) {
             return 0xFF632c6c;
+        }
+        if (getSkin(itemStack) == 3) {
+            return 0xFF2e304d;
         }
         return 0xFF2a2e28;
     }
@@ -79,9 +86,11 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
         if (getSkin(itemStack) == 1) {
             return 0xFF7a6873;
         }
-
         if (getSkin(itemStack) == 2) {
             return 0xFFf5cf5d;
+        }
+        if (getSkin(itemStack) == 3) {
+            return 0xFFbfafbd;
         }
         return 0xFFa99797;
     }
@@ -92,6 +101,9 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
         }
         if (getSkin(itemStack) == 2) {
             return 0xFF180f17;
+        }
+        if (getSkin(itemStack) == 3) {
+            return 0xFF100d13;
         }
         return 0xF0171315;
     }
@@ -107,7 +119,6 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
     public boolean hasShrill(ItemStack stack) {
         return EnchantmentHelper.hasAnyEnchantmentsWith(stack, AttunedEnchantmentEffects.SCREECH);
     }
-
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         user.setCurrentHand(hand);
@@ -126,7 +137,8 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
                 switch (stack.getOrDefault(skin, 0)) {
                     case 0 -> result = 1;
                     case 1 -> result = 2;
-                    case 2 -> result = 0;
+                    case 2 -> result = 3;
+                    case 3 -> result = 0;
                 }
 
                 stack.set(skin, result);
@@ -146,6 +158,7 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
         switch (getSkin(stack)) {
             case 1 -> skinId = "skin/valediction";
             case 2 -> skinId = "skin/amarite";
+            case 3 -> skinId = "skin/wimdy";
             default -> skinId = "tuning_fork";
         }
 
@@ -167,7 +180,10 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
                 Attuned.id("skin/valediction_blocking"),
                 Attuned.id("skin/amarite"),
                 Attuned.id("skin/amarite_handheld"),
-                Attuned.id("skin/amarite_blocking")
+                Attuned.id("skin/amarite_blocking"),
+                Attuned.id("skin/wimdy"),
+                Attuned.id("skin/wimdy_handheld"),
+                Attuned.id("skin/wimdy_blocking")
         );
     }
 
@@ -194,9 +210,10 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
     public void spawnHitParticles(PlayerEntity playerEntity, Entity target) {
         ItemStack stack = playerEntity.getStackInHand(Hand.MAIN_HAND);
         switch (getSkin(stack)) {
-            case 0 -> ParticleUtils.spawnSweepParticles(EFFECTS[playerEntity.getRandom().nextInt(EFFECTS.length)], playerEntity);
             case 1 -> ParticleUtils.spawnSweepParticles(ALT_EFFECTS[playerEntity.getRandom().nextInt(ALT_EFFECTS.length)], playerEntity);
             case 2 -> ParticleUtils.spawnSweepParticles(AMARITE_EFFECTS[playerEntity.getRandom().nextInt(AMARITE_EFFECTS.length)], playerEntity);
+            case 3 -> ParticleUtils.spawnSweepParticles(WIMDY_EFFECTS[playerEntity.getRandom().nextInt(WIMDY_EFFECTS.length)], playerEntity);
+            default -> ParticleUtils.spawnSweepParticles(EFFECTS[playerEntity.getRandom().nextInt(EFFECTS.length)], playerEntity);
         }
     }
 
@@ -207,6 +224,10 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
 
         if (getSkin(stack) == 2) {
             return Text.literal("Amarite Tuning Fork").withColor(0xf5cf5d);
+        }
+
+        if (getSkin(stack) == 3) {
+            return Text.literal("Galestar").withColor(0x918197);
         }
         return super.getName(stack).copy().withColor(0xFFa99797);
     }
@@ -226,15 +247,7 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
 
     public void playHitSound(PlayerEntity player, Entity target) {
         ItemStack stack = player.getMainHandStack();
-        SoundEvent toPlay = null;
-
-        switch (getSkin(stack)) {
-            case 0 -> toPlay = SoundEvents.BLOCK_ANCIENT_DEBRIS_BREAK;
-            case 1 -> toPlay = SoundEvents.BLOCK_MANGROVE_ROOTS_BREAK;
-            case 2 -> toPlay = SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK;
-        }
-
-        player.playSound(toPlay, 1, (float) (1.0f + player.getRandom().nextGaussian() / 10.0f));
+        player.playSound(attuned$specificSounds(stack), 1, (float) (1.0f + player.getRandom().nextGaussian() / 10.0f));
     }
 
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
@@ -247,7 +260,21 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
         switch (getSkin(stack)) {
             case 1 -> returnedValue = 0xFF7d153b;
             case 2 -> returnedValue = 0xFFf5cf5d;
+            case 3 -> returnedValue = 0xFFb69bc8;
             default -> returnedValue = 0xFFffffff;
+        }
+
+        return returnedValue;
+    }
+
+    public SoundEvent attuned$specificSounds(ItemStack stack) {
+        SoundEvent returnedValue;
+
+        switch (getSkin(stack)) {
+            case 1 -> returnedValue = SoundEvents.BLOCK_MANGROVE_ROOTS_BREAK;
+            case 2 -> returnedValue = SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK;
+            case 3 -> returnedValue = SoundEvents.ENTITY_BREEZE_SHOOT;
+            default -> returnedValue = SoundEvents.BLOCK_ANCIENT_DEBRIS_BREAK;
         }
 
         return returnedValue;
@@ -274,6 +301,8 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
                     0.0, 0.0, 0.0,
                     0.1
             );
+
+            player.playSoundToPlayer(attuned$specificSounds(stack),SoundCategory.PLAYERS, 1, (float) (1.0f + player.getRandom().nextGaussian() / 10.0f));
         }
     }
 
@@ -334,6 +363,8 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
                             if (!player.isCreative()) {
                                 player.getItemCooldownManager().set(this, 130);
                             }
+
+                            player.playSoundToPlayer(attuned$specificSounds(stack),SoundCategory.PLAYERS, 1, (float) (1.0f + player.getRandom().nextGaussian() / 10.0f));
                         }
                     }
                 }

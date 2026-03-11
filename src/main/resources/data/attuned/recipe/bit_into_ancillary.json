@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "show_notification": false,
+  "category": "misc",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "attuned:ancillary_bit"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "attuned:ancillary"
+  }
+}
