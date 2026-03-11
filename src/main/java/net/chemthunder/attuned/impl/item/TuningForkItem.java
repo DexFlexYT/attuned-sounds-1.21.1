@@ -97,8 +97,17 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
     }
 
     public TuningForkItem(Item.Settings settings) {
-        super(settings.component(AttunedDataComponents.CHARGES, 0).component(AttunedDataComponents.SKIN, 0));
+        super(settings.component(AttunedDataComponents.CHARGES, 0).component(AttunedDataComponents.SKIN, 0).component(AttunedDataComponents.HELD_TICKS, 0));
     }
+
+    public boolean hasOctave(ItemStack stack) {
+        return EnchantmentHelper.hasAnyEnchantmentsWith(stack, AttunedEnchantmentEffects.SHOCKWAVE);
+    }
+
+    public boolean hasShrill(ItemStack stack) {
+        return EnchantmentHelper.hasAnyEnchantmentsWith(stack, AttunedEnchantmentEffects.SCREECH);
+    }
+
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         user.setCurrentHand(hand);
@@ -145,8 +154,6 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
                 return MiscUtils.isGui(renderMode) ? Attuned.id(skinId) : Attuned.id(skinId + "_blocking");
             }
         }
-
-        //  Armada.LOGGER.info(skinId);
         return MiscUtils.isGui(renderMode) ? Attuned.id(skinId) : Attuned.id(skinId + "_handheld");
     }
 
@@ -246,38 +253,96 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
         return returnedValue;
     }
 
-    public boolean hasOctave(ItemStack stack) {
-        return EnchantmentHelper.hasAnyEnchantmentsWith(stack, AttunedEnchantmentEffects.SHOCKWAVE);
+    public void attuned$tuningForkParry(PlayerEntity player, LivingEntity source, World world, ItemStack stack) {
+        if (world instanceof ServerWorld serverWorld) {
+            Vec3d pos = player.getPos();
+            player.setVelocity(player.getRotationVec(0).multiply(-1.4f));
+            player.velocityModified = true;
+
+            player.stopUsingItem();
+
+            player.getItemCooldownManager().set(this, 90);
+
+            serverWorld.spawnParticles(
+                    new ShockwaveParticleEffect(
+                            attuned$shockwaveColors(stack),
+                            3,
+                            Direction.Axis.Y
+                    ),
+                    pos.x, pos.y + 0.5f, pos.z,
+                    1,
+                    0.0, 0.0, 0.0,
+                    0.1
+            );
+        }
     }
 
+    public int getItemBarStep(ItemStack stack) {
+        return Math.round((float) stack.getOrDefault(AttunedDataComponents.HELD_TICKS, 0) / maxCharges * 13);
+    }
 
+    public boolean isItemBarVisible(ItemStack stack) {
+        return hasOctave(stack);
+    }
 
-    public void attuned$tuningForkParry(PlayerEntity player, LivingEntity source, World world, ItemStack stack) {
-        var charges = stack.getOrDefault(AttunedDataComponents.CHARGES, 0);
-        if (world instanceof ServerWorld serverWorld) {
-            if (charges >= 3) {
-                Vec3d pos = player.getPos();
-                player.setVelocity(player.getRotationVec(0).multiply(-1.4f));
-                player.velocityModified = true;
+    public int getItemBarColor(ItemStack stack) {
+        return attuned$shockwaveColors(stack);
+    }
 
-                player.stopUsingItem();
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        var heldTicks = stack.getOrDefault(AttunedDataComponents.HELD_TICKS, 0);
+        Hand hand = user.getActiveHand();
 
-                player.getItemCooldownManager().set(this, 90);
-
-                serverWorld.spawnParticles(
-                        new ShockwaveParticleEffect(
-                                attuned$shockwaveColors(stack),
-                                3,
-                                Direction.Axis.Y
-                        ),
-                        pos.x, pos.y + 0.5f, pos.z,
-                        1,
-                        0.0, 0.0, 0.0,
-                        0.1
-                );
-            } else {
-                stack.set(AttunedDataComponents.CHARGES, charges + 1);
+        if (hasOctave(user.getStackInHand(hand))) {
+            if (heldTicks != maxCharges) {
+                user.getStackInHand(hand).set(AttunedDataComponents.HELD_TICKS, heldTicks + 1);
             }
         }
+
+        super.usageTick(world, user, stack, remainingUseTicks);
+    }
+
+    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        var HELDTICKS = stack.getOrDefault(AttunedDataComponents.HELD_TICKS, 0);
+
+        if (EnchantmentHelper.hasAnyEnchantmentsWith(stack, AttunedEnchantmentEffects.SHOCKWAVE)) {
+            if (user != null) {
+                if (user instanceof PlayerEntity player) {
+                    if (world instanceof ServerWorld serverWorld) {
+                        if (HELDTICKS >= 2) {
+                            player.setVelocity(player.getRotationVec(0).multiply((double) HELDTICKS / 14));
+                            player.velocityModified = true;
+
+                            serverWorld.spawnParticles(
+                                    new ShockwaveParticleEffect(
+                                            attuned$shockwaveColors(stack),
+                                            3,
+                                            Direction.Axis.Y
+                                    ),
+                                    player.getX(),
+                                    player.getY() + 0.5f,
+                                    player.getZ(),
+                                    1,
+                                    0,
+                                    0,
+                                    0,
+                                    0.1f
+                            );
+
+                            stack.set(AttunedDataComponents.HELD_TICKS, 0);
+
+                            if (!player.isCreative()) {
+                                player.getItemCooldownManager().set(this, 130);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        super.onStoppedUsing(stack, world, user, remainingUseTicks);
+    }
+
+    public boolean allowComponentsUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
+        return !ItemStack.areItemsEqual(oldStack, newStack);
     }
 }

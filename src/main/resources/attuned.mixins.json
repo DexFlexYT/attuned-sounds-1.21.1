@@ -13,6 +13,7 @@
     "requireAnnotations": true
   },
   "client": [
+    "client.AbstractSoundInstanceMixin",
     "client.PlayerEntityRendererMixin"
   ]
 }

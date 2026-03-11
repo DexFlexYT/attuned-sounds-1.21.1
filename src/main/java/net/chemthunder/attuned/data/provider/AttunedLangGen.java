@@ -2,6 +2,7 @@ package net.chemthunder.attuned.data.provider;
 
 import net.chemthunder.attuned.impl.index.AttunedBlocks;
 import net.chemthunder.attuned.impl.index.AttunedItems;
+import net.chemthunder.attuned.impl.index.AttunedStatusEffects;
 import net.chemthunder.attuned.impl.index.data.AttunedEnchantments;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
@@ -16,6 +17,7 @@ public class AttunedLangGen extends FabricLanguageProvider {
 
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder translationBuilder) {
         AttunedItems.ITEMS.registerLang(wrapperLookup, translationBuilder);
+        AttunedStatusEffects.STATUS_EFFECTS.registerLang(wrapperLookup, translationBuilder);
 
         translationBuilder.add("enchantment.attuned.octave", "Octave");
         translationBuilder.add("enchantment.attuned.octave.desc", "Swaps the boost from blocking to a long-range dash in any direction.");
