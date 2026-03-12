@@ -3,7 +3,6 @@ package net.chemthunder.attuned.impl;
 import net.acoyt.acornlib.api.ALib;
 import net.chemthunder.attuned.impl.index.*;
 import net.fabricmc.api.ModInitializer;
-
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

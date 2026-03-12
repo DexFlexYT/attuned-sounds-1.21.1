@@ -1,6 +1,5 @@
 package net.chemthunder.attuned.data.provider;
 
-import moriyashiine.enchancement.common.tag.ModItemTags;
 import net.chemthunder.attuned.impl.index.AttunedItems;
 import net.chemthunder.attuned.impl.index.tag.AttunedItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

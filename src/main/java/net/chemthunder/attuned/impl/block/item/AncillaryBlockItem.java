@@ -2,7 +2,6 @@ package net.chemthunder.attuned.impl.block.item;
 
 import com.nitron.nitrogen.util.interfaces.ColorableItem;
 import net.chemthunder.attuned.impl.index.AttunedBlocks;
-import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;

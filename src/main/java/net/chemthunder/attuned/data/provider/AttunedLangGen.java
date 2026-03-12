@@ -1,9 +1,7 @@
 package net.chemthunder.attuned.data.provider;
 
-import net.chemthunder.attuned.impl.index.AttunedBlocks;
 import net.chemthunder.attuned.impl.index.AttunedItems;
 import net.chemthunder.attuned.impl.index.AttunedStatusEffects;
-import net.chemthunder.attuned.impl.index.data.AttunedEnchantments;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;

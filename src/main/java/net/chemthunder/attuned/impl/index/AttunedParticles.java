@@ -1,6 +1,5 @@
 package net.chemthunder.attuned.impl.index;
 
-import net.acoyt.acornlib.api.registrants.ParticleTypeRegistrant;
 import net.chemthunder.attuned.impl.Attuned;
 import net.chemthunder.attuned.impl.client.particle.ShockwaveParticle;
 import net.chemthunder.attuned.impl.client.particle.ShockwaveParticleEffect;
