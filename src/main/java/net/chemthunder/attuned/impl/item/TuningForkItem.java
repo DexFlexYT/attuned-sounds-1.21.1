@@ -1,6 +1,9 @@
 package net.chemthunder.attuned.impl.item;
 
 import com.nitron.nitrogen.util.interfaces.ColorableItem;
+import moriyashiine.enchancement.common.Enchancement;
+import moriyashiine.enchancement.common.init.ModEnchantmentEffectComponentTypes;
+import moriyashiine.enchancement.common.init.ModEnchantments;
 import net.acoyt.acornlib.api.item.CustomHitParticleItem;
 import net.acoyt.acornlib.api.item.CustomHitSoundItem;
 import net.acoyt.acornlib.api.item.ModelVaryingItem;
@@ -371,10 +374,6 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
     }
 
     public boolean isEnchantable(ItemStack stack) {
-        return true;
-    }
-
-    public boolean canBeEnchantedWith(ItemStack stack, RegistryEntry<Enchantment> enchantment, EnchantingContext context) {
         return true;
     }
 }

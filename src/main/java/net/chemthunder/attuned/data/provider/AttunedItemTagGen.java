@@ -1,10 +1,12 @@
 package net.chemthunder.attuned.data.provider;
 
+import moriyashiine.enchancement.common.tag.ModItemTags;
 import net.chemthunder.attuned.impl.index.AttunedItems;
 import net.chemthunder.attuned.impl.index.tag.AttunedItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.ItemTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -16,6 +18,10 @@ public class AttunedItemTagGen extends FabricTagProvider.ItemTagProvider {
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
         this.getOrCreateTagBuilder(AttunedItemTags.TUNING_FORKS)
                 .add(AttunedItems.TUNING_FORK)
+                .setReplace(false);
+
+        this.getOrCreateTagBuilder(ItemTags.SWORDS)
+                .addTag(AttunedItemTags.TUNING_FORKS)
                 .setReplace(false);
     }
 }
