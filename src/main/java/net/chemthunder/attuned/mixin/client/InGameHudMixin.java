@@ -2,7 +2,6 @@ package net.chemthunder.attuned.mixin.client;
 
 import net.chemthunder.attuned.impl.Attuned;
 import net.chemthunder.attuned.impl.cca.entity.TuningForkSymphonyComponent;
-import net.chemthunder.attuned.mixin.PlayerEntityMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;

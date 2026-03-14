@@ -2,7 +2,6 @@ package net.chemthunder.attuned.impl.cca;
 
 import net.chemthunder.attuned.impl.cca.entity.TuningForkShockwaveComponent;
 import net.chemthunder.attuned.impl.cca.entity.TuningForkSymphonyComponent;
-import net.chemthunder.attuned.impl.item.TuningForkItem;
 import net.minecraft.entity.player.PlayerEntity;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;

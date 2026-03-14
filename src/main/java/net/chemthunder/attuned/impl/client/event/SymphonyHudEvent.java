@@ -1,6 +1,5 @@
 package net.chemthunder.attuned.impl.client.event;
 
-import net.chemthunder.attuned.impl.cca.entity.TuningForkShockwaveComponent;
 import net.chemthunder.attuned.impl.cca.entity.TuningForkSymphonyComponent;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
