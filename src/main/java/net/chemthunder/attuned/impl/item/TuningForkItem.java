@@ -283,7 +283,7 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
 
             player.stopUsingItem();
 
-            player.getItemCooldownManager().set(this, 90);
+            player.getItemCooldownManager().set(this, 110);
 
             serverWorld.spawnParticles(
                     new ShockwaveParticleEffect(
@@ -390,13 +390,3 @@ public class TuningForkItem extends Item implements ModelVaryingItem, CustomHitP
         return true;
     }
 }
-
-// OCTAVE
-/*
-Upon use, negate fall damage for a few secs
- */
-
-// SYMPHONY
-/*
-While blocking, if you die you get 10s in which you take ZERO damage. After this runs out, you will die instantly.
- */

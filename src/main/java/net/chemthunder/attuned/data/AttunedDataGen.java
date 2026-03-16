@@ -17,6 +17,7 @@ public class AttunedDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(AttunedItemTagGen::new);
         pack.addProvider(AttunedBlockLootTableGen::new);
         pack.addProvider(AttunedBlockTagGen::new);
+        pack.addProvider(AttunedDamageTypeTagGen::new);
 
         pack.addProvider(AttunedDynamicRegistryGen::new);
 	}

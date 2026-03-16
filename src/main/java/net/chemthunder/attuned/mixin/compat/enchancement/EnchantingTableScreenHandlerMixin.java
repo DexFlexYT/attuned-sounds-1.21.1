@@ -17,7 +17,7 @@ public class EnchantingTableScreenHandlerMixin {
             at = @At("RETURN")
     )
     private Ingredient customMaterialSoNoTag(Ingredient original, ItemStack stack) {
-        if (stack.getItem() instanceof TuningForkItem item) {
+        if (stack.getItem() instanceof TuningForkItem) {
             return Ingredient.ofItems(AttunedItems.ANCILLARY_BIT, Items.IRON_INGOT);
         }
 
